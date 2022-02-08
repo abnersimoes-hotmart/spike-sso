@@ -1,0 +1,25 @@
+@startuml C4_Elements
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+LAYOUT_WITH_LEGEND()
+
+title System Authentication diagram with SSO in Hotmart
+
+Person(creator, "Creator", "A creator who sells his products on Hotmart")
+System_Ext(external_app, "External App", "External application that authenticates with hotmart users")
+' Container(developers, "Developers", "API System", "Provides APIs for consuming Hotmart data")
+' Container(cas, "CAS", "Authorization Server", "Provides all functionality for validating and obtaining tokens representing a user")
+
+Rel(creator, external_app, "Click login link")
+
+Enterprise_Boundary(hotmart, "Hotmart Systems") {
+    System(cas, "CAS", "Provides all functionality for validating and obtaining tokens representing a user")
+}
+
+Rel_D(external_app, cas, "Authorization Code Request to /authorize")
+Rel_Back(external_app, cas, "Redirect to login/authorization prompt")
+Rel_D(external_app, cas, "Authenticate and Consent")
+Rel_Back(external_app, cas, "Authorization Code")
+
+
+@enduml
