@@ -129,8 +129,9 @@ app.get('/callback', async (req, res) => {
   // parse response to get tokens
   const tokens = JSON.parse(codeExchangeResponse);
   req.session.accessToken = tokens.access_token;
-  console.log(`accesstoken ${req.session.accessToken}`);
-  console.log(`state ${state}`);
+  console.log(`accesstoken: ${req.session.accessToken}`);
+  console.log(`idToken: ${tokens.id_token}`);
+  console.log(`state: ${state}`);
 
   try {
     console.log('chegou aqui 4.1');
