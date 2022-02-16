@@ -84,30 +84,28 @@ app.get('/login', (req, res) => {
 
   var url =
     authorizationEndpoint +
-    '?client_id=' +
-    CLIENT_ID + //o identificador que o provedor atribui ao seu aplicativo
-    '&scope=' +
-    scope + //as informações que você deseja saber sobre a autenticação de usuários
+    `?client_id=${CLIENT_ID}` + //o identificador que o provedor atribui ao seu aplicativo
+    `&scope=${scope}` + //as informações que você deseja saber sobre a autenticação de usuários
     '&response_type=code' + //o tipo de resposta que seu aplicativo espera do provedor
     '&response_mode=query' + //como seu aplicativo obterá o tokenId ou code para o usuário final
-    '&state=' +
-    state + //string aleatória que ajuda seu aplicativo a evitar ataques de falsificação de solicitação entre sites (CSRF)
-    '&code_challenge=' +
-    code_challenge +
+    `&state=${state}` + //string aleatória que ajuda seu aplicativo a evitar ataques de falsificação de solicitação entre sites (CSRF)
+    `&code_challenge=${code_challenge}` +
     '&code_challenge_method=S256' +
-    '&redirect_uri=' +
-    HOME_URI +
-    CALLBACK_URI; //onde o provedor redirecionará os usuários após o processo de autenticação
+    `&redirect_uri=${HOME_URI}${CALLBACK_URI}`; //onde o provedor redirecionará os usuários após o processo de autenticação
 
   // adicione o cookie à resposta e emite um usuário de redirecionamento 302
   res.cookie(stateCookie, state, options).redirect(url);
 });
 
 app.get('/callback', async (req, res) => {
+  console.log('chegou aqui 1');
+  const tokenEndpoint = oidcProviderInfo['token_endpoint'];
   const state = req.signedCookies[stateCookie]; // pega o state do cookie
   delete req.signedCookies[stateCookie]; // delete state
 
   const { code } = req.query;
+  console.log(req.query);
+
   const codeExchangeOptions = {
     grant_type: 'authorization_code',
     client_id: CLIENT_ID,
@@ -117,12 +115,10 @@ app.get('/callback', async (req, res) => {
     code_verifier: code_verifier
   };
 
-  console.log(req.query);
   console.log('chegou aqui 2');
-  const codeExchangeResponse = await request.post(
-    `${OIDC_PROVIDER}${TOKEN_URI}`,
-    { form: codeExchangeOptions }
-  );
+  const codeExchangeResponse = await request.post(tokenEndpoint, {
+    form: codeExchangeOptions
+  });
 
   console.log('chegou aqui 3');
 

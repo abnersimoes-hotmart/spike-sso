@@ -1,18 +1,13 @@
 <h1>End-User Profile</h1>
 <img src="{{decodedIdToken.picture}}" style="max-width: 100px; border-radius: 50%;" alt="Profile picture" />
 <ul>
-    <li><strong>User Id:</strong> {{decodedIdToken.sub}}</li>
-    <li><strong>User Name:</strong> {{decodedIdToken.name}}</li>
-    <li><strong>User Email:</strong> {{decodedIdToken.email}}</li>
-    {{!-- <li><strong>User Email:</strong> {{decodedIdToken.email}}</li>
-    <li><strong>User Email:</strong> {{decodedIdToken.email}}</li>
-    <li><strong>User Email:</strong> {{decodedIdToken.email}}</li>
-    <li><strong>User Email:</strong> {{decodedIdToken.email}}</li>
-    <li><strong>User Email:</strong> {{decodedIdToken.email}}</li>
-    <li><strong>User Email:</strong> {{decodedIdToken.email}}</li>
-    <li><strong>User Email:</strong> {{decodedIdToken.email}}</li>
-    <li><strong>User Email:</strong> {{decodedIdToken.email}}</li>
-    <li><strong>User Email:</strong> {{decodedIdToken.email}}</li> --}}
+    <li><strong>User Id (sub):</strong> {{decodedIdToken.sub}}</li>
+    <li><strong>User PreferredName (preferred_username):</strong> {{decodedIdToken.preferred_username}}</li>
+    <li><strong>User Id (profile):</strong> {{decodedIdToken.id}}</li>
+    <li><strong>User Locale (profile):</strong> {{decodedIdToken.locale}}</li>
+    <li><strong>User Name (profile):</strong> {{decodedIdToken.name}}</li>
+    <li><strong>User UCode (profile):</strong> {{decodedIdToken.ucode}}</li>
+    <li><strong>User Email (email):</strong> {{decodedIdToken.email}}</li>
 </ul>
 <p>
     You can also use a tool like
