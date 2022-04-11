@@ -17,9 +17,8 @@ export function sha256(buffer) {
 }
 
 export function validateIDToken(idToken, state, issuer) {
-  console.log('chegou aqui 5');
   const decodedToken = jwt.decode(idToken);
-  console.log(`decodedToken: ${JSON.stringify(decodedToken)}`);
+  console.log(`DEBUG - decodedToken: ${JSON.stringify(decodedToken)}`);
   // fetch ID token details
   const {
     state: decodedState,

@@ -52,7 +52,9 @@ request(`${OIDC_PROVIDER}${CONFIGURATION_URL}`)
   })
   .catch(error => {
     console.error(error);
-    console.error(`Unable to get OIDC endpoints for ${OIDC_PROVIDER}`);
+    console.error(
+      `Unable to get OIDC endpoints for ${OIDC_PROVIDER}${CONFIGURATION_URL}`
+    );
     process.exit(1);
   });
 
@@ -71,9 +73,9 @@ app.get('/login', (req, res) => {
   const state = crypto.randomBytes(16).toString('hex');
   const code_challenge = base64URLEncode(sha256(code_verifier));
 
-  console.log(`state=${state}`);
-  console.log(`code_verifier=${code_verifier}`);
-  console.log(`code_challenge=${code_challenge}`);
+  console.log(`DEBUG - state=${state}`);
+  console.log(`DEBUG - code_verifier=${code_verifier}`);
+  console.log(`DEBUG - code_challenge=${code_challenge}`);
 
   // define um cookie assinado contendo o valor state
   const options = {
@@ -98,13 +100,11 @@ app.get('/login', (req, res) => {
 });
 
 app.get('/callback', async (req, res) => {
-  console.log('chegou aqui 1');
   const tokenEndpoint = oidcProviderInfo['token_endpoint'];
   const state = req.signedCookies[stateCookie]; // pega o state do cookie
   delete req.signedCookies[stateCookie]; // delete state
 
   const { code } = req.query;
-  console.log(req.query);
 
   const codeExchangeOptions = {
     grant_type: 'authorization_code',
@@ -115,22 +115,18 @@ app.get('/callback', async (req, res) => {
     code_verifier: code_verifier
   };
 
-  console.log('chegou aqui 2');
   const codeExchangeResponse = await request.post(tokenEndpoint, {
     form: codeExchangeOptions
   });
 
-  console.log('chegou aqui 3');
-
   // parse response to get tokens
   const tokens = JSON.parse(codeExchangeResponse);
   req.session.accessToken = tokens.access_token;
-  console.log(`accesstoken: ${req.session.accessToken}`);
-  console.log(`idToken: ${tokens.id_token}`);
-  console.log(`state: ${state}`);
+  console.log(`DEBUG - accesstoken: ${req.session.accessToken}`);
+  console.log(`DEBUG - idToken: ${tokens.id_token}`);
+  console.log(`DEBUG - state: ${state}`);
 
   try {
-    console.log('chegou aqui 4.1');
     req.session.decodedIdToken = validateIDToken(
       tokens.id_token,
       state,
@@ -139,7 +135,6 @@ app.get('/callback', async (req, res) => {
     req.session.idToken = tokens.id_token;
     res.redirect('/profile');
   } catch (error) {
-    console.log('chegou aqui 4.2');
     res.status(401).send();
   }
 });
