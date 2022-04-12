@@ -123,6 +123,7 @@ app.get('/callback', async (req, res) => {
   const tokens = JSON.parse(codeExchangeResponse);
   req.session.accessToken = tokens.access_token;
   console.log(`DEBUG - accesstoken: ${req.session.accessToken}`);
+  console.log(`DEBUG - refreshToken: ${tokens.refresh_token}`);
   console.log(`DEBUG - idToken: ${tokens.id_token}`);
   console.log(`DEBUG - state: ${state}`);
 
